@@ -1,40 +1,42 @@
 <template>
   <div class="todo-item" :class="{ 'todo-completed': todo.completed }">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center flex-grow-1">
-        <input
-          type="checkbox"
-          :checked="todo.completed"
-          @change="toggleTodo"
-          class="form-check-input me-3"
-        />
-        <div class="flex-grow-1" v-if="!isEditing">
-          <p 
-            class="todo-text mb-1"
-            :class="{ 'todo-completed': todo.completed }"
-            @dblclick="startEditing"
-          >
-            {{ todo.text }}
-          </p>
-          <p 
-            v-if="todo.description" 
-            class="todo-description mb-2 text-muted"
-            :class="{ 'todo-completed': todo.completed }"
-            @dblclick="startEditing"
-          >
-            {{ todo.description }}
-          </p>
-          <div class="d-flex align-items-center gap-2">
-            <small class="text-muted">
-              Created: {{ formatDate(todo.createdAt) }}
-            </small>
-            <span v-if="todo.dueDate" class="badge" :class="dueDateBadgeClass">
-              <i class="bi bi-calendar-event me-1"></i>
-              Due: {{ formatDueDate(todo.dueDate) }}
-            </span>
-          </div>
+    <div class="d-flex align-items-center">
+      <div class="drag-handle me-2" title="Drag to reorder">
+        <i class="bi bi-grip-vertical text-muted"></i>
+      </div>
+      <input
+        type="checkbox"
+        :checked="todo.completed"
+        @change="toggleTodo"
+        class="form-check-input me-3"
+      />
+      <div class="flex-grow-1" v-if="!isEditing">
+        <p 
+          class="todo-text mb-1"
+          :class="{ 'todo-completed': todo.completed }"
+          @dblclick="startEditing"
+        >
+          {{ todo.text }}
+        </p>
+        <p 
+          v-if="todo.description" 
+          class="todo-description mb-2 text-muted"
+          :class="{ 'todo-completed': todo.completed }"
+          @dblclick="startEditing"
+        >
+          {{ todo.description }}
+        </p>
+        <div class="d-flex align-items-center gap-2">
+          <small class="text-muted">
+            Created: {{ formatDate(todo.createdAt) }}
+          </small>
+          <span v-if="todo.dueDate" class="badge" :class="dueDateBadgeClass">
+            <i class="bi bi-calendar-event me-1"></i>
+            Due: {{ formatDueDate(todo.dueDate) }}
+          </span>
         </div>
-        <div class="flex-grow-1" v-else>
+      </div>
+      <div class="flex-grow-1" v-else>
           <div class="mb-2">
             <input
               ref="editInput"
@@ -74,7 +76,6 @@
               style="max-width: 150px;"
             />
           </div>
-        </div>
       </div>
       <div class="d-flex align-items-center">
         <button
@@ -159,6 +160,7 @@ const cancelEdit = () => {
     ? props.todo.dueDate.toISOString().split('T')[0] 
     : ''
 }
+
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {

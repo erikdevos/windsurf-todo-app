@@ -19,6 +19,7 @@
         :current-filter="todosStore.filter"
         :active-todos-count="todosStore.activeTodosCount"
         :completed-todos-count="todosStore.completedTodosCount"
+        :overdue-todos-count="todosStore.overdueTodosCount"
         :total-todos-count="todosStore.todos.length"
         @set-filter="setFilter"
         @clear-completed="clearCompleted"
@@ -30,6 +31,7 @@
         @toggle="toggleTodo"
         @delete="deleteTodo"
         @edit="editTodo"
+        @reorder="reorderTodos"
       />
 
       <!-- Footer -->
@@ -42,7 +44,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Todo } from '~/stores/todos'
+
 const todosStore = useTodosStore()
 
 // Load todos from localStorage on client side
@@ -51,23 +55,27 @@ onMounted(() => {
 })
 
 // Todo actions
-const addTodo = (text, description, dueDate) => {
+const addTodo = (text: string, description?: string, dueDate?: Date) => {
   todosStore.addTodo(text, description, dueDate)
 }
 
-const toggleTodo = (id) => {
+const toggleTodo = (id: string) => {
   todosStore.toggleTodo(id)
 }
 
-const deleteTodo = (id) => {
+const deleteTodo = (id: string) => {
   todosStore.deleteTodo(id)
 }
 
-const editTodo = (id, text, description, dueDate) => {
+const editTodo = (id: string, text: string, description?: string, dueDate?: Date) => {
   todosStore.editTodo(id, text, description, dueDate)
 }
 
-const setFilter = (filter) => {
+const reorderTodos = (newOrder: Todo[]) => {
+  todosStore.reorderTodos(newOrder)
+}
+
+const setFilter = (filter: 'all' | 'active' | 'completed' | 'overdue') => {
   todosStore.setFilter(filter)
 }
 

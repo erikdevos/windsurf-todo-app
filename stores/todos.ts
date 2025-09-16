@@ -7,24 +7,38 @@ export interface Todo {
   completed: boolean
   createdAt: Date
   dueDate?: Date
+  order: number
 }
 
 export const useTodosStore = defineStore('todos', {
   state: () => ({
     todos: [] as Todo[],
-    filter: 'all' as 'all' | 'active' | 'completed'
+    filter: 'all' as 'all' | 'active' | 'completed' | 'overdue'
   }),
 
   getters: {
     filteredTodos: (state) => {
-      switch (state.filter) {
-        case 'active':
-          return state.todos.filter(todo => !todo.completed)
-        case 'completed':
-          return state.todos.filter(todo => todo.completed)
-        default:
-          return state.todos
-      }
+      const filtered = (() => {
+        switch (state.filter) {
+          case 'active':
+            return state.todos.filter(todo => !todo.completed)
+          case 'completed':
+            return state.todos.filter(todo => todo.completed)
+          case 'overdue':
+            return state.todos.filter(todo => {
+              if (!todo.dueDate || todo.completed) return false
+              const today = new Date()
+              today.setHours(0, 0, 0, 0)
+              const dueDate = new Date(todo.dueDate)
+              dueDate.setHours(0, 0, 0, 0)
+              return dueDate < today
+            })
+          default:
+            return state.todos
+        }
+      })()
+      
+      return filtered.sort((a, b) => a.order - b.order)
     },
     
     activeTodosCount: (state) => {
@@ -33,20 +47,34 @@ export const useTodosStore = defineStore('todos', {
     
     completedTodosCount: (state) => {
       return state.todos.filter(todo => todo.completed).length
+    },
+
+    overdueTodosCount: (state) => {
+      return state.todos.filter(todo => {
+        if (!todo.dueDate || todo.completed) return false
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const dueDate = new Date(todo.dueDate)
+        dueDate.setHours(0, 0, 0, 0)
+        return dueDate < today
+      }).length
     }
   },
 
   actions: {
     addTodo(text: string, description?: string, dueDate?: Date) {
+      const maxOrder = this.todos.length > 0 ? Math.max(...this.todos.map(t => t.order)) : -1
       const newTodo: Todo = {
         id: Date.now().toString(),
-        text: text.trim(),
-        description: description?.trim() || undefined,
+        text,
+        description,
         completed: false,
         createdAt: new Date(),
-        dueDate: dueDate
+        dueDate,
+        order: maxOrder + 1
       }
-      this.todos.unshift(newTodo)
+      
+      this.todos.push(newTodo)
       this.saveToLocalStorage()
     },
 
@@ -83,7 +111,7 @@ export const useTodosStore = defineStore('todos', {
       this.saveToLocalStorage()
     },
 
-    setFilter(filter: 'all' | 'active' | 'completed') {
+    setFilter(filter: 'all' | 'active' | 'completed' | 'overdue') {
       this.filter = filter
     },
 
@@ -99,16 +127,26 @@ export const useTodosStore = defineStore('todos', {
         if (stored) {
           try {
             const parsed = JSON.parse(stored)
-            this.todos = parsed.map((todo: any) => ({
+            this.todos = parsed.map((todo: any, index: number) => ({
               ...todo,
               createdAt: new Date(todo.createdAt),
-              dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
+              dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
+              order: todo.order !== undefined ? todo.order : index
             }))
           } catch (error) {
             console.error('Error loading todos from localStorage:', error)
           }
         }
       }
+    },
+
+    reorderTodos(newOrder: Todo[]) {
+      // Update the order property for each todo based on its new position
+      newOrder.forEach((todo, index) => {
+        todo.order = index
+      })
+      this.todos = newOrder
+      this.saveToLocalStorage()
     },
 
     exportTodos() {
@@ -155,10 +193,12 @@ export const useTodosStore = defineStore('todos', {
             }
             
             // Convert dates and merge with existing todos
-            const processedTodos = validTodos.map((todo: any) => ({
+            const maxOrder = this.todos.length > 0 ? Math.max(...this.todos.map(t => t.order)) : -1
+            const processedTodos = validTodos.map((todo: any, index: number) => ({
               ...todo,
               createdAt: new Date(todo.createdAt),
-              dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
+              dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
+              order: todo.order !== undefined ? todo.order : maxOrder + 1 + index
             }))
             
             // Add imported todos to existing ones (avoiding duplicates by ID)

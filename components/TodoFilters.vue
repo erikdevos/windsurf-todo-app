@@ -9,6 +9,7 @@
             @click="setFilter(filter.value)"
             class="filter-btn"
             :class="{ 'active': currentFilter === filter.value }"
+            :data-filter="filter.value"
           >
             {{ filter.label }}
             <span v-if="filter.count !== undefined" class="badge bg-secondary ms-1">
@@ -35,15 +36,16 @@
 
 <script setup lang="ts">
 interface Props {
-  currentFilter: 'all' | 'active' | 'completed'
+  currentFilter: 'all' | 'active' | 'completed' | 'overdue'
   activeTodosCount: number
   completedTodosCount: number
   totalTodosCount: number
+  overdueTodosCount: number
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  setFilter: [filter: 'all' | 'active' | 'completed']
+  setFilter: [filter: 'all' | 'active' | 'completed' | 'overdue']
   clearCompleted: []
 }>()
 
@@ -59,13 +61,18 @@ const filters = computed(() => [
     count: props.activeTodosCount 
   },
   { 
+    value: 'overdue' as const, 
+    label: 'Overdue', 
+    count: props.overdueTodosCount 
+  },
+  { 
     value: 'completed' as const, 
     label: 'Completed', 
     count: props.completedTodosCount 
   }
 ])
 
-const setFilter = (filter: 'all' | 'active' | 'completed') => {
+const setFilter = (filter: 'all' | 'active' | 'completed' | 'overdue') => {
   emit('setFilter', filter)
 }
 
