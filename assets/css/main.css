@@ -1,0 +1,160 @@
+/* Custom styles for the Todo App */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.todo-item {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.todo-completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.todo-text {
+  cursor: pointer;
+  user-select: none;
+}
+
+.todo-date {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.filter-btn {
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #495057;
+  padding: 0.375rem 0.75rem;
+  margin-right: 0.25rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.filter-btn.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: #6c757d;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.btn-icon:hover {
+  color: #495057;
+}
+
+.btn-icon.btn-delete:hover {
+  color: #dc3545;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-title {
+  color: #212529;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.app-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* Description styling */
+.todo-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.todo-description.todo-completed {
+  opacity: 0.7;
+}
+
+/* Due date styling */
+.due-date-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.due-overdue {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+
+.due-today {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
+.due-soon {
+  background-color: #fd7e14 !important;
+  color: white !important;
+}
+
+.due-future {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+/* Animation classes */
+.todo-enter-active,
+.todo-leave-active {
+  transition: all 0.3s ease;
+}
+
+.todo-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.todo-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.todo-move {
+  transition: transform 0.3s ease;
+}
