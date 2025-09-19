@@ -47,12 +47,7 @@
             </label>
           </div>
           <div v-if="hasDueDate" class="flex-grow-1">
-            <input
-              v-model="dueDate"
-              type="date"
-              class="form-control"
-              :min="today"
-            />
+            <DatePicker v-model="dueDateObj" />
           </div>
         </div>
       </form>
@@ -69,12 +64,7 @@ const newTodoText = ref('')
 const description = ref('')
 const isAdding = ref(false)
 const hasDueDate = ref(false)
-const dueDate = ref('')
-
-// Get today's date in YYYY-MM-DD format for min attribute
-const today = computed(() => {
-  return new Date().toISOString().split('T')[0]
-})
+const dueDateObj = ref<Date | null>(null)
 
 const addTodo = async () => {
   if (!newTodoText.value.trim()) return
@@ -82,15 +72,15 @@ const addTodo = async () => {
   isAdding.value = true
   
   try {
-    const dueDateObj = hasDueDate.value && dueDate.value 
-      ? new Date(dueDate.value + 'T00:00:00') 
+    const finalDueDate = hasDueDate.value && dueDateObj.value 
+      ? dueDateObj.value 
       : undefined
     
-    emit('add', newTodoText.value, description.value, dueDateObj)
+    emit('add', newTodoText.value, description.value, finalDueDate)
     newTodoText.value = ''
     description.value = ''
     hasDueDate.value = false
-    dueDate.value = ''
+    dueDateObj.value = null
   } finally {
     isAdding.value = false
   }

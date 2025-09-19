@@ -15,7 +15,9 @@ type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}
 
 interface _GlobalComponents {
       'AddTodo': typeof import("../../components/AddTodo.vue")['default']
+    'DatePicker': typeof import("../../components/DatePicker.vue")['default']
     'ImportExport': typeof import("../../components/ImportExport.vue")['default']
+    'ThemeToggle': typeof import("../../components/ThemeToggle.vue")['default']
     'TodoFilters': typeof import("../../components/TodoFilters.vue")['default']
     'TodoItem': typeof import("../../components/TodoItem.vue")['default']
     'TodoList': typeof import("../../components/TodoList.vue")['default']
@@ -44,7 +46,9 @@ interface _GlobalComponents {
     'NuxtIsland': typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': typeof import("../../node_modules/nuxt/dist/app/components/server-placeholder")['default']
       'LazyAddTodo': LazyComponent<typeof import("../../components/AddTodo.vue")['default']>
+    'LazyDatePicker': LazyComponent<typeof import("../../components/DatePicker.vue")['default']>
     'LazyImportExport': LazyComponent<typeof import("../../components/ImportExport.vue")['default']>
+    'LazyThemeToggle': LazyComponent<typeof import("../../components/ThemeToggle.vue")['default']>
     'LazyTodoFilters': LazyComponent<typeof import("../../components/TodoFilters.vue")['default']>
     'LazyTodoItem': LazyComponent<typeof import("../../components/TodoItem.vue")['default']>
     'LazyTodoList': LazyComponent<typeof import("../../components/TodoList.vue")['default']>

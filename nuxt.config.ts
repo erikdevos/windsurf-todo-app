@@ -1,8 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  nitro: {
+    compatibilityDate: '2025-09-19'
+  },
   modules: [
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@vueuse/nuxt'
   ],
   css: [
     'bootstrap/dist/css/bootstrap.min.css',
@@ -15,7 +19,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: 'A simple and elegant todo application built with Nuxt.js' }
+        { name: 'description', content: 'A simple and elegant todo application built with Nuxt.js' }
       ],
       script: [
         {

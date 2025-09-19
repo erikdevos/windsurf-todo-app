@@ -1,5 +1,8 @@
 <template>
   <div class="min-vh-100">
+    <!-- Theme Toggle -->
+    <ThemeToggle />
+    
     <div class="container py-5" style="max-width: 800px;">
       <!-- Header -->
       <div class="app-header">
@@ -45,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import type { Todo } from '~/stores/todos'
 
 const todosStore = useTodosStore()

@@ -68,13 +68,9 @@
                 <small>Due date</small>
               </label>
             </div>
-            <input
-              v-if="hasEditDueDate"
-              v-model="editDueDate"
-              type="date"
-              class="form-control form-control-sm"
-              style="max-width: 150px;"
-            />
+            <div v-if="hasEditDueDate" style="max-width: 300px;">
+              <DatePicker v-model="editDueDateObj" />
+            </div>
           </div>
       </div>
       <div class="d-flex align-items-center">
@@ -116,7 +112,7 @@ const editText = ref('')
 const editDescription = ref('')
 const editInput = ref<HTMLInputElement>()
 const hasEditDueDate = ref(false)
-const editDueDate = ref('')
+const editDueDateObj = ref<Date | null>(null)
 
 const toggleTodo = () => {
   emit('toggle', props.todo.id)
@@ -132,9 +128,7 @@ const startEditing = () => {
   editText.value = props.todo.text
   editDescription.value = props.todo.description || ''
   hasEditDueDate.value = !!props.todo.dueDate
-  editDueDate.value = props.todo.dueDate 
-    ? props.todo.dueDate.toISOString().split('T')[0] 
-    : ''
+  editDueDateObj.value = props.todo.dueDate ? new Date(props.todo.dueDate) : null
   nextTick(() => {
     editInput.value?.focus()
     editInput.value?.select()
@@ -143,10 +137,10 @@ const startEditing = () => {
 
 const saveEdit = () => {
   if (editText.value.trim()) {
-    const dueDateObj = hasEditDueDate.value && editDueDate.value 
-      ? new Date(editDueDate.value + 'T00:00:00') 
+    const finalDueDate = hasEditDueDate.value && editDueDateObj.value 
+      ? editDueDateObj.value 
       : undefined
-    emit('edit', props.todo.id, editText.value, editDescription.value, dueDateObj)
+    emit('edit', props.todo.id, editText.value, editDescription.value, finalDueDate)
   }
   isEditing.value = false
 }
@@ -156,9 +150,7 @@ const cancelEdit = () => {
   editText.value = props.todo.text
   editDescription.value = props.todo.description || ''
   hasEditDueDate.value = !!props.todo.dueDate
-  editDueDate.value = props.todo.dueDate 
-    ? props.todo.dueDate.toISOString().split('T')[0] 
-    : ''
+  editDueDateObj.value = props.todo.dueDate ? new Date(props.todo.dueDate) : null
 }
 
 

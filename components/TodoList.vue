@@ -13,14 +13,14 @@
         :todo="todo"
         @toggle="$emit('toggle', $event)"
         @delete="$emit('delete', $event)"
-        @edit="$emit('edit', $event, arguments[1])"
+        @edit="(id, text, description, dueDate) => $emit('edit', id, text, description, dueDate)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Sortable from 'sortablejs'
+import Sortable, { type SortableEvent } from 'sortablejs'
 import type { Todo } from '~/stores/todos'
 
 interface Props {
@@ -31,24 +31,49 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   toggle: [id: string]
   delete: [id: string]
-  edit: [id: string, text: string]
+  edit: [id: string, text: string, description?: string, dueDate?: Date]
   reorder: [todos: Todo[]]
 }>()
 
 const todoContainer = ref<HTMLElement>()
+let sortableInstance: Sortable | null = null
 
 // Initialize sortable functionality
 onMounted(() => {
-  if (todoContainer.value) {
-    Sortable.create(todoContainer.value, {
+  initializeSortable()
+})
+
+// Reinitialize when todos change
+watch(() => props.todos.length, () => {
+  nextTick(() => {
+    initializeSortable()
+  })
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (sortableInstance) {
+    sortableInstance.destroy()
+    sortableInstance = null
+  }
+})
+
+const initializeSortable = () => {
+  if (sortableInstance) {
+    sortableInstance.destroy()
+    sortableInstance = null
+  }
+  
+  if (todoContainer.value && props.todos.length > 0) {
+    sortableInstance = Sortable.create(todoContainer.value, {
       animation: 150,
       ghostClass: 'sortable-ghost',
       chosenClass: 'sortable-chosen',
       dragClass: 'sortable-drag',
       handle: '.drag-handle',
-      forceFallback: true,
+      forceFallback: false, // Try without fallback first
       fallbackClass: 'sortable-fallback',
-      onEnd: (evt) => {
+      onEnd: (evt: SortableEvent) => {
         if (evt.oldIndex !== undefined && evt.newIndex !== undefined && evt.oldIndex !== evt.newIndex) {
           // Create new array with reordered todos
           const newTodos = [...props.todos]
@@ -60,7 +85,7 @@ onMounted(() => {
       }
     })
   }
-})</script>
+}</script>
 
 <style scoped>
 .todo-enter-active,
