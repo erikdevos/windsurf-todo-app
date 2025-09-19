@@ -59,9 +59,6 @@
       "@vue/runtime-core": [
         "../node_modules/@vue/runtime-core"
       ],
-      "@vue/compiler-sfc": [
-        "../node_modules/@vue/compiler-sfc"
-      ],
       "vue-router": [
         "../node_modules/vue-router"
       ],
@@ -76,9 +73,6 @@
       ],
       "nuxt": [
         "../node_modules/nuxt"
-      ],
-      "vite/client": [
-        "../node_modules/vite/client"
       ],
       "#shared": [
         "../shared"

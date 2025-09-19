@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+export type Priority = 'low' | 'medium' | 'high'
+
 export interface Todo {
   id: string
   text: string
@@ -8,16 +10,19 @@ export interface Todo {
   createdAt: Date
   dueDate?: Date
   order: number
+  priority: Priority
 }
 
 export const useTodosStore = defineStore('todos', {
   state: () => ({
     todos: [] as Todo[],
-    filter: 'all' as 'all' | 'active' | 'completed' | 'overdue'
+    filter: 'all' as 'all' | 'active' | 'completed' | 'overdue' | 'high-priority' | 'medium-priority' | 'low-priority',
+    searchQuery: ''
   }),
 
   getters: {
     filteredTodos: (state) => {
+      // First apply the current filter
       const filtered = (() => {
         switch (state.filter) {
           case 'active':
@@ -33,12 +38,37 @@ export const useTodosStore = defineStore('todos', {
               dueDate.setHours(0, 0, 0, 0)
               return dueDate < today
             })
+          case 'high-priority':
+            return state.todos.filter(todo => todo.priority === 'high' && !todo.completed)
+          case 'medium-priority':
+            return state.todos.filter(todo => todo.priority === 'medium' && !todo.completed)
+          case 'low-priority':
+            return state.todos.filter(todo => todo.priority === 'low' && !todo.completed)
           default:
             return state.todos
         }
       })()
       
-      return filtered.sort((a, b) => a.order - b.order)
+      // Then apply search query if it exists
+      if (state.searchQuery) {
+        const query = state.searchQuery.toLowerCase()
+        return filtered
+          .filter(todo => 
+            todo.text.toLowerCase().includes(query) || 
+            (todo.description && todo.description.toLowerCase().includes(query))
+          )
+          .sort((a, b) => {
+            // Sort by priority first (high to low), then by order
+            const priorityOrder = { high: 3, medium: 2, low: 1 }
+            return priorityOrder[b.priority] - priorityOrder[a.priority] || a.order - b.order
+          })
+      }
+      
+      // Default sort by priority (high to low) then by order
+      return filtered.sort((a, b) => {
+        const priorityOrder = { high: 3, medium: 2, low: 1 }
+        return priorityOrder[b.priority] - priorityOrder[a.priority] || a.order - b.order
+      })
     },
     
     activeTodosCount: (state) => {
@@ -58,12 +88,23 @@ export const useTodosStore = defineStore('todos', {
         dueDate.setHours(0, 0, 0, 0)
         return dueDate < today
       }).length
+    },
+    
+    highPriorityCount: (state) => {
+      return state.todos.filter(todo => todo.priority === 'high' && !todo.completed).length
+    },
+    
+    mediumPriorityCount: (state) => {
+      return state.todos.filter(todo => todo.priority === 'medium' && !todo.completed).length
+    },
+    
+    lowPriorityCount: (state) => {
+      return state.todos.filter(todo => todo.priority === 'low' && !todo.completed).length
     }
   },
 
   actions: {
-    addTodo(text: string, description?: string, dueDate?: Date) {
-      const maxOrder = this.todos.length > 0 ? Math.max(...this.todos.map(t => t.order)) : -1
+    addTodo(text: string, description?: string, dueDate?: Date, priority: Priority = 'medium') {
       const newTodo: Todo = {
         id: Date.now().toString(),
         text,
@@ -71,11 +112,12 @@ export const useTodosStore = defineStore('todos', {
         completed: false,
         createdAt: new Date(),
         dueDate,
-        order: maxOrder + 1
+        order: this.todos.length,
+        priority
       }
-      
-      this.todos.push(newTodo)
+      this.todos.unshift(newTodo)
       this.saveToLocalStorage()
+      return newTodo.id
     },
 
     toggleTodo(id: string) {
@@ -94,13 +136,18 @@ export const useTodosStore = defineStore('todos', {
       }
     },
 
-    editTodo(id: string, newText: string, newDescription?: string, newDueDate?: Date) {
+    editTodo(id: string, newText: string, newDescription?: string, newDueDate?: Date, newPriority?: Priority) {
       const todo = this.todos.find(t => t.id === id)
       if (todo) {
-        todo.text = newText.trim()
-        todo.description = newDescription?.trim() || undefined
+        todo.text = newText
+        if (newDescription !== undefined) {
+          todo.description = newDescription
+        }
         if (newDueDate !== undefined) {
           todo.dueDate = newDueDate
+        }
+        if (newPriority !== undefined) {
+          todo.priority = newPriority
         }
         this.saveToLocalStorage()
       }
@@ -111,8 +158,12 @@ export const useTodosStore = defineStore('todos', {
       this.saveToLocalStorage()
     },
 
-    setFilter(filter: 'all' | 'active' | 'completed' | 'overdue') {
+    setFilter(filter: 'all' | 'active' | 'completed' | 'overdue' | 'high-priority' | 'medium-priority' | 'low-priority') {
       this.filter = filter
+    },
+
+    setSearchQuery(query: string) {
+      this.searchQuery = query
     },
 
     saveToLocalStorage() {
@@ -131,7 +182,8 @@ export const useTodosStore = defineStore('todos', {
               ...todo,
               createdAt: new Date(todo.createdAt),
               dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
-              order: todo.order !== undefined ? todo.order : index
+              order: todo.order !== undefined ? todo.order : index,
+              priority: todo.priority || 'medium' // Default to medium for existing todos
             }))
           } catch (error) {
             console.error('Error loading todos from localStorage:', error)
@@ -163,68 +215,67 @@ export const useTodosStore = defineStore('todos', {
       URL.revokeObjectURL(url)
     },
 
-    importTodos(file: File): Promise<{ success: boolean; message: string; count?: number }> {
-      return new Promise((resolve) => {
-        const reader = new FileReader()
+    async importTodos(file: File): Promise<{ success: boolean; message: string; count?: number }> {
+      try {
+        const text = await file.text()
+        let todos: any[]
         
-        reader.onload = (e) => {
-          try {
-            const content = e.target?.result as string
-            const importedTodos = JSON.parse(content)
-            
-            // Validate the imported data
-            if (!Array.isArray(importedTodos)) {
-              resolve({ success: false, message: 'Invalid file format. Expected an array of todos.' })
-              return
-            }
-            
-            // Validate each todo item
-            const validTodos = importedTodos.filter((todo: any) => {
-              return todo && 
-                     typeof todo.id === 'string' && 
-                     typeof todo.text === 'string' && 
-                     typeof todo.completed === 'boolean' &&
-                     todo.createdAt
-            })
-            
-            if (validTodos.length === 0) {
-              resolve({ success: false, message: 'No valid todos found in the file.' })
-              return
-            }
-            
-            // Convert dates and merge with existing todos
-            const maxOrder = this.todos.length > 0 ? Math.max(...this.todos.map(t => t.order)) : -1
-            const processedTodos = validTodos.map((todo: any, index: number) => ({
-              ...todo,
-              createdAt: new Date(todo.createdAt),
-              dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
-              order: todo.order !== undefined ? todo.order : maxOrder + 1 + index
-            }))
-            
-            // Add imported todos to existing ones (avoiding duplicates by ID)
-            const existingIds = new Set(this.todos.map(t => t.id))
-            const newTodos = processedTodos.filter((todo: Todo) => !existingIds.has(todo.id))
-            
-            this.todos = [...this.todos, ...newTodos]
-            this.saveToLocalStorage()
-            
-            resolve({ 
-              success: true, 
-              message: `Successfully imported ${newTodos.length} todos.`,
-              count: newTodos.length
-            })
-            
-          } catch (error) {
-            resolve({ success: false, message: 'Error parsing JSON file. Please check the file format.' })
+        try {
+          todos = JSON.parse(text)
+          if (!Array.isArray(todos)) {
+            return { success: false, message: 'Invalid file format: expected an array of todos' }
           }
+        } catch (error) {
+          return { success: false, message: 'Error parsing JSON file' }
         }
-        
-        reader.onerror = () => {
-          resolve({ success: false, message: 'Error reading the file.' })
+
+        // Validate and filter todos
+        const validTodos = todos.filter(todo => {
+          // Check if the todo has all required fields with correct types
+          const hasRequiredFields = (
+            typeof todo === 'object' &&
+            todo !== null &&
+            'id' in todo &&
+            'text' in todo &&
+            'completed' in todo &&
+            'createdAt' in todo &&
+            'order' in todo
+          )
+          
+          // Check if priority is valid if it exists
+          const hasValidPriority = !('priority' in todo) || 
+            ['high', 'medium', 'low'].includes(todo.priority)
+            
+          return hasRequiredFields && hasValidPriority
+        }).map(todo => ({
+          ...todo,
+          createdAt: new Date(todo.createdAt),
+          dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
+          priority: todo.priority && ['high', 'medium', 'low'].includes(todo.priority) 
+            ? todo.priority 
+            : 'medium' as const
+        }))
+
+        if (validTodos.length === 0) {
+          return { success: false, message: 'No valid todos found in the file' }
         }
-        
-        reader.readAsText(file)
-      })
+
+        // Add the valid todos
+        this.todos = [...validTodos, ...this.todos]
+        this.saveToLocalStorage()
+
+        return { 
+          success: true, 
+          message: `Successfully imported ${validTodos.length} todo(s)`,
+          count: validTodos.length
+        }
+      } catch (error) {
+        console.error('Error importing todos:', error)
+        return { 
+          success: false, 
+          message: error instanceof Error ? error.message : 'An error occurred while importing todos' 
+        }
+      }
     }
   }
 })

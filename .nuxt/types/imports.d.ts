@@ -407,7 +407,7 @@ declare global {
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from '../../node_modules/vue'
   import('../../node_modules/vue')
   // @ts-ignore
-  export type { Todo } from '../../stores/todos'
+  export type { Priority, Todo } from '../../stores/todos'
   import('../../stores/todos')
 }
 // for vue template auto import

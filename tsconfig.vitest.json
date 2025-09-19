@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node", "jsdom", "@nuxt/test-utils/vitest"]
+  },
+  "include": [
+    "**/*.test.ts",
+    "**/*.test-d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".nuxt"
+  ]
+}

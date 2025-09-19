@@ -3,7 +3,7 @@
     <!-- Theme Toggle -->
     <ThemeToggle />
     
-    <div class="container py-5" style="max-width: 800px;">
+    <div class="container py-5" style="max-width: 900px;">
       <!-- Header -->
       <div class="app-header">
         <h1 class="app-title display-4">Todo App</h1>
@@ -24,8 +24,12 @@
         :completed-todos-count="todosStore.completedTodosCount"
         :overdue-todos-count="todosStore.overdueTodosCount"
         :total-todos-count="todosStore.todos.length"
+        :high-priority-count="todosStore.highPriorityCount"
+        :medium-priority-count="todosStore.mediumPriorityCount"
+        :low-priority-count="todosStore.lowPriorityCount"
         @set-filter="setFilter"
         @clear-completed="clearCompleted"
+        @search="handleSearch"
       />
 
       <!-- Todo List -->
@@ -49,7 +53,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import type { Todo } from '~/stores/todos'
+import type { Todo, Priority } from '~/stores/todos'
 
 const todosStore = useTodosStore()
 
@@ -59,8 +63,8 @@ onMounted(() => {
 })
 
 // Todo actions
-const addTodo = (text: string, description?: string, dueDate?: Date) => {
-  todosStore.addTodo(text, description, dueDate)
+const addTodo = (text: string, description?: string, dueDate?: Date, priority: Priority = 'medium') => {
+  todosStore.addTodo(text, description, dueDate, priority)
 }
 
 const toggleTodo = (id: string) => {
@@ -71,16 +75,20 @@ const deleteTodo = (id: string) => {
   todosStore.deleteTodo(id)
 }
 
-const editTodo = (id: string, text: string, description?: string, dueDate?: Date) => {
-  todosStore.editTodo(id, text, description, dueDate)
+const editTodo = (id: string, text: string, description?: string, dueDate?: Date, priority?: Priority) => {
+  todosStore.editTodo(id, text, description, dueDate, priority)
 }
 
 const reorderTodos = (newOrder: Todo[]) => {
   todosStore.reorderTodos(newOrder)
 }
 
-const setFilter = (filter: 'all' | 'active' | 'completed' | 'overdue') => {
+const setFilter = (filter: 'all' | 'active' | 'completed' | 'overdue' | 'high-priority' | 'medium-priority' | 'low-priority') => {
   todosStore.setFilter(filter)
+}
+
+const handleSearch = (query: string) => {
+  todosStore.setSearchQuery(query)
 }
 
 const clearCompleted = () => {

@@ -34,20 +34,42 @@
             :disabled="isAdding"
           ></textarea>
         </div>
-        <div class="d-flex align-items-center gap-3">
-          <div class="form-check">
-            <input
-              v-model="hasDueDate"
-              class="form-check-input"
-              type="checkbox"
-              id="hasDueDate"
-            />
-            <label class="form-check-label" for="hasDueDate">
-              Set due date
-            </label>
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="form-check">
+              <input
+                v-model="hasDueDate"
+                class="form-check-input"
+                type="checkbox"
+                id="hasDueDate"
+              />
+              <label class="form-check-label" for="hasDueDate">
+                Set due date
+              </label>
+            </div>
+            <div v-if="hasDueDate" class="flex-grow-1">
+              <DatePicker v-model="dueDateObj" />
+            </div>
           </div>
-          <div v-if="hasDueDate" class="flex-grow-1">
-            <DatePicker v-model="dueDateObj" />
+          <div class="d-flex align-items-center gap-2">
+            <label class="form-check-label" style="min-width: 60px;">
+              Priority:
+            </label>
+            <select 
+              v-model="priority" 
+              class="form-select form-select-sm"
+              style="max-width: 200px;"
+            >
+              <option value="high">
+                <i class="bi bi-exclamation-triangle-fill text-danger me-1"></i> High
+              </option>
+              <option value="medium">
+                <i class="bi bi-exclamation-circle-fill text-warning me-1"></i> Medium
+              </option>
+              <option value="low">
+                <i class="bi bi-info-circle-fill text-info me-1"></i> Low
+              </option>
+            </select>
           </div>
         </div>
       </form>
@@ -57,7 +79,7 @@
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  add: [text: string, description?: string, dueDate?: Date]
+  add: [text: string, description?: string, dueDate?: Date, priority?: Priority]
 }>()
 
 const newTodoText = ref('')
@@ -65,6 +87,7 @@ const description = ref('')
 const isAdding = ref(false)
 const hasDueDate = ref(false)
 const dueDateObj = ref<Date | null>(null)
+const priority = ref<Priority>('medium')
 
 const addTodo = async () => {
   if (!newTodoText.value.trim()) return
@@ -76,11 +99,12 @@ const addTodo = async () => {
       ? dueDateObj.value 
       : undefined
     
-    emit('add', newTodoText.value, description.value, finalDueDate)
+    emit('add', newTodoText.value, description.value, finalDueDate, priority.value)
     newTodoText.value = ''
     description.value = ''
     hasDueDate.value = false
     dueDateObj.value = null
+    priority.value = 'medium'
   } finally {
     isAdding.value = false
   }
