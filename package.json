@@ -20,11 +20,14 @@
     "@types/sortablejs": "^1.15.8",
     "gh-pages": "^6.3.0",
     "happy-dom": "^9.20.3",
-    "nuxt": "^3.8.0",
+    "nuxt": "^3.7.4",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vitest": "^0.34.6",
     "vue-tsc": "^1.8.8"
+  },
+  "overrides": {
+    "oxc-parser": "0.8.0"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",

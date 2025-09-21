@@ -1,5 +1,5 @@
 
-import { _replaceAppConfig } from '#app/config'
+import { updateAppConfig } from '#app/config'
 import { defuFn } from 'defu'
 
 const inlineConfig = {
@@ -9,7 +9,7 @@ const inlineConfig = {
 // Vite - webpack is handled directly in #app/config
 if (import.meta.hot) {
   import.meta.hot.accept((newModule) => {
-    _replaceAppConfig(newModule.default)
+    updateAppConfig(newModule.default)
   })
 }
 

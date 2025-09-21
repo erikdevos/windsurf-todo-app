@@ -1,5 +1,5 @@
 
-declare module 'nuxt/app/defaults' {
+declare module '#app/defaults' {
   type DefaultAsyncDataErrorValue = null
   type DefaultAsyncDataValue = null
   type DefaultErrorValue = null
