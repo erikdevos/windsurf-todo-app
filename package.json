@@ -10,13 +10,16 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "predeploy": "npm run generate",
+    "deploy": "gh-pages -d .output/public"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/test-utils": "^3.8.1",
     "@types/node": "^20.0.0",
     "@types/sortablejs": "^1.15.8",
+    "gh-pages": "^6.3.0",
     "happy-dom": "^9.20.3",
     "nuxt": "^3.8.0",
     "typescript": "^5.2.2",
@@ -27,8 +30,8 @@
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@vitejs/plugin-vue": "^4.3.4",
-    "@vue/test-utils": "^2.4.5",
     "@vue/compiler-sfc": "^3.3.4",
+    "@vue/test-utils": "^2.4.5",
     "@vueuse/integrations": "^10.7.0",
     "@vueuse/nuxt": "^10.7.0",
     "bootstrap": "^5.3.2",

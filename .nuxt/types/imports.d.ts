@@ -23,7 +23,6 @@ declare global {
   const createGlobalState: typeof import('../../node_modules/@vueuse/core')['createGlobalState']
   const createInjectionState: typeof import('../../node_modules/@vueuse/core')['createInjectionState']
   const createReactiveFn: typeof import('../../node_modules/@vueuse/core')['createReactiveFn']
-  const createRef: typeof import('../../node_modules/@vueuse/core')['createRef']
   const createReusableTemplate: typeof import('../../node_modules/@vueuse/core')['createReusableTemplate']
   const createSharedComposable: typeof import('../../node_modules/@vueuse/core')['createSharedComposable']
   const createTemplatePromise: typeof import('../../node_modules/@vueuse/core')['createTemplatePromise']
@@ -81,7 +80,6 @@ declare global {
   const onBeforeUpdate: typeof import('../../node_modules/vue')['onBeforeUpdate']
   const onClickOutside: typeof import('../../node_modules/@vueuse/core')['onClickOutside']
   const onDeactivated: typeof import('../../node_modules/vue')['onDeactivated']
-  const onElementRemoval: typeof import('../../node_modules/@vueuse/core')['onElementRemoval']
   const onErrorCaptured: typeof import('../../node_modules/vue')['onErrorCaptured']
   const onKeyStroke: typeof import('../../node_modules/@vueuse/core')['onKeyStroke']
   const onLongPress: typeof import('../../node_modules/@vueuse/core')['onLongPress']
@@ -186,7 +184,6 @@ declare global {
   const useColorMode: typeof import('../../node_modules/@vueuse/core')['useColorMode']
   const useConfirmDialog: typeof import('../../node_modules/@vueuse/core')['useConfirmDialog']
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']
-  const useCountdown: typeof import('../../node_modules/@vueuse/core')['useCountdown']
   const useCounter: typeof import('../../node_modules/@vueuse/core')['useCounter']
   const useCssModule: typeof import('../../node_modules/vue')['useCssModule']
   const useCssVar: typeof import('../../node_modules/@vueuse/core')['useCssVar']
@@ -276,7 +273,6 @@ declare global {
   const usePreferredDark: typeof import('../../node_modules/@vueuse/core')['usePreferredDark']
   const usePreferredLanguages: typeof import('../../node_modules/@vueuse/core')['usePreferredLanguages']
   const usePreferredReducedMotion: typeof import('../../node_modules/@vueuse/core')['usePreferredReducedMotion']
-  const usePreferredReducedTransparency: typeof import('../../node_modules/@vueuse/core')['usePreferredReducedTransparency']
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']
   const usePrevious: typeof import('../../node_modules/@vueuse/core')['usePrevious']
   const useRafFn: typeof import('../../node_modules/@vueuse/core')['useRafFn']
@@ -293,7 +289,6 @@ declare global {
   const useRouter: typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRouter']
   const useRuntimeConfig: typeof import('../../node_modules/nuxt/dist/app/nuxt')['useRuntimeConfig']
   const useRuntimeHook: typeof import('../../node_modules/nuxt/dist/app/composables/runtime-hook')['useRuntimeHook']
-  const useSSRWidth: typeof import('../../node_modules/@vueuse/core')['useSSRWidth']
   const useScreenOrientation: typeof import('../../node_modules/@vueuse/core')['useScreenOrientation']
   const useScreenSafeArea: typeof import('../../node_modules/@vueuse/core')['useScreenSafeArea']
   const useScript: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScript']
@@ -352,12 +347,10 @@ declare global {
   const useThrottleFn: typeof import('../../node_modules/@vueuse/core')['useThrottleFn']
   const useThrottledRefHistory: typeof import('../../node_modules/@vueuse/core')['useThrottledRefHistory']
   const useTimeAgo: typeof import('../../node_modules/@vueuse/core')['useTimeAgo']
-  const useTimeAgoIntl: typeof import('../../node_modules/@vueuse/core')['useTimeAgoIntl']
   const useTimeout: typeof import('../../node_modules/@vueuse/core')['useTimeout']
   const useTimeoutFn: typeof import('../../node_modules/@vueuse/core')['useTimeoutFn']
   const useTimeoutPoll: typeof import('../../node_modules/@vueuse/core')['useTimeoutPoll']
   const useTimestamp: typeof import('../../node_modules/@vueuse/core')['useTimestamp']
-  const useTitle: typeof import('../../node_modules/@vueuse/core')['useTitle']
   const useToNumber: typeof import('../../node_modules/@vueuse/core')['useToNumber']
   const useToString: typeof import('../../node_modules/@vueuse/core')['useToString']
   const useTodosStore: typeof import('../../stores/todos')['useTodosStore']
@@ -436,7 +429,6 @@ declare module 'vue' {
     readonly createGlobalState: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createGlobalState']>
     readonly createInjectionState: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createInjectionState']>
     readonly createReactiveFn: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createReactiveFn']>
-    readonly createRef: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createRef']>
     readonly createReusableTemplate: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createReusableTemplate']>
     readonly createSharedComposable: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createSharedComposable']>
     readonly createTemplatePromise: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['createTemplatePromise']>
@@ -494,7 +486,6 @@ declare module 'vue' {
     readonly onBeforeUpdate: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeUpdate']>
     readonly onClickOutside: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['onClickOutside']>
     readonly onDeactivated: UnwrapRef<typeof import('../../node_modules/vue')['onDeactivated']>
-    readonly onElementRemoval: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['onElementRemoval']>
     readonly onErrorCaptured: UnwrapRef<typeof import('../../node_modules/vue')['onErrorCaptured']>
     readonly onKeyStroke: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['onKeyStroke']>
     readonly onLongPress: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['onLongPress']>
@@ -599,7 +590,6 @@ declare module 'vue' {
     readonly useColorMode: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useColorMode']>
     readonly useConfirmDialog: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useConfirmDialog']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
-    readonly useCountdown: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useCountdown']>
     readonly useCounter: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useCounter']>
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue')['useCssModule']>
     readonly useCssVar: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useCssVar']>
@@ -689,7 +679,6 @@ declare module 'vue' {
     readonly usePreferredDark: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['usePreferredDark']>
     readonly usePreferredLanguages: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['usePreferredLanguages']>
     readonly usePreferredReducedMotion: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['usePreferredReducedMotion']>
-    readonly usePreferredReducedTransparency: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['usePreferredReducedTransparency']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrevious: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['usePrevious']>
     readonly useRafFn: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useRafFn']>
@@ -706,7 +695,6 @@ declare module 'vue' {
     readonly useRouter: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRouter']>
     readonly useRuntimeConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useRuntimeConfig']>
     readonly useRuntimeHook: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/runtime-hook')['useRuntimeHook']>
-    readonly useSSRWidth: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useSSRWidth']>
     readonly useScreenOrientation: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useScreenOrientation']>
     readonly useScreenSafeArea: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useScreenSafeArea']>
     readonly useScript: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScript']>
@@ -765,12 +753,10 @@ declare module 'vue' {
     readonly useThrottleFn: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useThrottleFn']>
     readonly useThrottledRefHistory: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useThrottledRefHistory']>
     readonly useTimeAgo: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimeAgo']>
-    readonly useTimeAgoIntl: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimeAgoIntl']>
     readonly useTimeout: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimeout']>
     readonly useTimeoutFn: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimeoutFn']>
     readonly useTimeoutPoll: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimeoutPoll']>
     readonly useTimestamp: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTimestamp']>
-    readonly useTitle: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useTitle']>
     readonly useToNumber: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useToNumber']>
     readonly useToString: UnwrapRef<typeof import('../../node_modules/@vueuse/core')['useToString']>
     readonly useTodosStore: UnwrapRef<typeof import('../../stores/todos')['useTodosStore']>

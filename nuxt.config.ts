@@ -1,19 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  nitro: {
-    compatibilityDate: '2025-09-19'
-  },
-  modules: [
-    '@pinia/nuxt',
-    '@vueuse/nuxt'
-  ],
-  css: [
-    'bootstrap/dist/css/bootstrap.min.css',
-    'bootstrap-icons/font/bootstrap-icons.css',
-    '~/assets/css/main.css'
-  ],
+  ssr: false, // Disable server-side rendering for GitHub Pages
   app: {
+    baseURL: process.env.NODE_ENV === 'production' ? '/windsurf-todo-app/' : '/',
+    buildAssetsDir: 'assets',
     head: {
       title: 'Todo App',
       meta: [
@@ -29,5 +20,22 @@ export default defineNuxtConfig({
         }
       ]
     }
-  }
+  },
+  nitro: {
+    compatibilityDate: '2025-09-19',
+    prerender: {
+      crawlLinks: true,
+      routes: ['/']
+    },
+    static: true // Enable static site generation
+  },
+  modules: [
+    '@pinia/nuxt',
+    '@vueuse/nuxt'
+  ],
+  css: [
+    'bootstrap/dist/css/bootstrap.min.css',
+    'bootstrap-icons/font/bootstrap-icons.css',
+    '~/assets/css/main.css'
+  ]
 })
