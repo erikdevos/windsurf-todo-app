@@ -8,28 +8,42 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Clean install dependencies
+      - name: Install dependencies
+        env:
+          NODE_ENV: production
+          NUXT_TELEMETRY_DISABLED: 1
         run: |
           npm cache clean --force
           rm -rf node_modules package-lock.json
-          npm install --legacy-peer-deps
+          npm install --omit=optional --legacy-peer-deps
 
       - name: Generate static site
+        env:
+          NODE_ENV: production
+          NUXT_TELEMETRY_DISABLED: 1
         run: npm run generate
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: .output/public
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages  # The branch the action should deploy to
-          clean: true
-          single-commit: true
+          path: .output/public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

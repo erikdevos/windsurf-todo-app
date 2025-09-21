@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV === 'development' },
   ssr: false, // Disable server-side rendering for GitHub Pages
   app: {
     baseURL: process.env.NODE_ENV === 'production' ? '/windsurf-todo-app/' : '/',
